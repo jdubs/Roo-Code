@@ -214,6 +214,45 @@ describe("CodeIndexOllamaEmbedder", () => {
 			expect(secondCall[1]?.signal).toBeDefined() // AbortSignal for timeout
 		})
 
+		it("should include Authorization header when API key is provided", async () => {
+			const embedderWithKey = new CodeIndexOllamaEmbedder({
+				ollamaBaseUrl: "http://localhost:11434",
+				ollamaModelId: "nomic-embed-text",
+				ollamaApiKey: "test-api-key",
+			})
+
+			mockFetch.mockImplementationOnce(() =>
+				Promise.resolve({
+					ok: true,
+					status: 200,
+					json: () =>
+						Promise.resolve({
+							models: [{ name: "nomic-embed-text:latest" }],
+						}),
+				} as Response),
+			)
+			mockFetch.mockImplementationOnce(() =>
+				Promise.resolve({
+					ok: true,
+					status: 200,
+					json: () =>
+						Promise.resolve({
+							embeddings: [[0.1, 0.2, 0.3]],
+						}),
+				} as Response),
+			)
+
+			await embedderWithKey.validateConfiguration()
+
+			const expectedHeaders = {
+				"Content-Type": "application/json",
+				Authorization: "Bearer test-api-key",
+			}
+			expect(mockFetch).toHaveBeenCalledTimes(2)
+			expect(mockFetch.mock.calls[0][1]?.headers).toEqual(expectedHeaders)
+			expect(mockFetch.mock.calls[1][1]?.headers).toEqual(expectedHeaders)
+		})
+
 		it("should fail validation when service is not available", async () => {
 			mockFetch.mockRejectedValueOnce(new Error("ECONNREFUSED"))
 

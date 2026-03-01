@@ -95,10 +95,12 @@ describe("CodeIndexServiceFactory", () => {
 			factory.createEmbedder()
 
 			// Assert
-			expect(MockedCodeIndexOllamaEmbedder).toHaveBeenCalledWith({
-				ollamaBaseUrl: "http://localhost:11434",
-				ollamaModelId: testModelId,
-			})
+			expect(MockedCodeIndexOllamaEmbedder).toHaveBeenCalledWith(
+				expect.objectContaining({
+					ollamaBaseUrl: "http://localhost:11434",
+					ollamaModelId: testModelId,
+				}),
+			)
 		})
 
 		it("should handle undefined model ID for OpenAI embedder", () => {
@@ -137,10 +139,34 @@ describe("CodeIndexServiceFactory", () => {
 			factory.createEmbedder()
 
 			// Assert
-			expect(MockedCodeIndexOllamaEmbedder).toHaveBeenCalledWith({
-				ollamaBaseUrl: "http://localhost:11434",
-				ollamaModelId: undefined,
-			})
+			expect(MockedCodeIndexOllamaEmbedder).toHaveBeenCalledWith(
+				expect.objectContaining({
+					ollamaBaseUrl: "http://localhost:11434",
+					ollamaModelId: undefined,
+				}),
+			)
+		})
+
+		it("should pass optional API key to Ollama embedder when provided", () => {
+			const testConfig = {
+				embedderProvider: "ollama",
+				modelId: "nomic-embed-text",
+				ollamaOptions: {
+					ollamaBaseUrl: "http://localhost:11434",
+					ollamaApiKey: "secret-key",
+				},
+			}
+			mockConfigManager.getConfig.mockReturnValue(testConfig as any)
+
+			factory.createEmbedder()
+
+			expect(MockedCodeIndexOllamaEmbedder).toHaveBeenCalledWith(
+				expect.objectContaining({
+					ollamaBaseUrl: "http://localhost:11434",
+					ollamaApiKey: "secret-key",
+					ollamaModelId: "nomic-embed-text",
+				}),
+			)
 		})
 
 		it("should throw error when OpenAI API key is missing", () => {

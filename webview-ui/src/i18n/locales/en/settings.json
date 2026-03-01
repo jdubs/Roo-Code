@@ -239,6 +239,8 @@
 			"confirmButton": "Clear Data"
 		},
 		"ollamaUrlPlaceholder": "http://localhost:11434",
+		"ollamaApiKeyLabel": "API Key (optional)",
+		"ollamaApiKeyPlaceholder": "For authenticated Ollama or cloud instances",
 		"openAiCompatibleBaseUrlPlaceholder": "https://api.example.com",
 		"modelDimensionPlaceholder": "1536",
 		"qdrantUrlPlaceholder": "http://localhost:6333",

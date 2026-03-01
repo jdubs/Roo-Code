@@ -2490,6 +2490,12 @@ export const webviewMessageHandler = async (
 						settings.codebaseIndexOpenRouterApiKey,
 					)
 				}
+				if (settings.codebaseIndexOllamaApiKey !== undefined) {
+					await provider.contextProxy.storeSecret(
+						"codebaseIndexOllamaApiKey",
+						settings.codebaseIndexOllamaApiKey,
+					)
+				}
 
 				// Send success response first - settings are saved regardless of validation
 				await provider.postMessageToWebview({
@@ -2628,6 +2634,7 @@ export const webviewMessageHandler = async (
 				"codebaseIndexVercelAiGatewayApiKey",
 			))
 			const hasOpenRouterApiKey = !!(await provider.context.secrets.get("codebaseIndexOpenRouterApiKey"))
+			const hasOllamaApiKey = !!(await provider.context.secrets.get("codebaseIndexOllamaApiKey"))
 
 			provider.postMessageToWebview({
 				type: "codeIndexSecretStatus",
@@ -2639,6 +2646,7 @@ export const webviewMessageHandler = async (
 					hasMistralApiKey,
 					hasVercelAiGatewayApiKey,
 					hasOpenRouterApiKey,
+					hasOllamaApiKey,
 				},
 			})
 			break
