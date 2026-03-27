@@ -677,6 +677,7 @@ export interface WebviewMessage {
 		codebaseIndexMistralApiKey?: string
 		codebaseIndexVercelAiGatewayApiKey?: string
 		codebaseIndexOpenRouterApiKey?: string
+		codebaseIndexOllamaApiKey?: string
 	}
 	updatedSettings?: RooCodeSettings
 	/** Task configuration applied via `createTask()` when starting a cloud task. */
